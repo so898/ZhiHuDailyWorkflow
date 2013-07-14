@@ -1,7 +1,7 @@
 <?php
 /**
  * a workflow for ZhiHuDaily.
- * @version 0.5
+ * @version 0.5.1
  * @author Bill Cheng(so89898@gmail.com)
  */
 
@@ -20,8 +20,10 @@ class ZhiHuWorkFlow
     {
     	$webcode = json_decode(file_get_contents('http://news.at.zhihu.com/api/1.2/news/latest'), 1);
 		$workflow = new Workflows();
+        $order = array("\r\n", "\n", "\r");
 		for($i=0;$i<count($webcode['news']);$i++){
-    		$workflow->result($i, $webcode['news'][$i]['share_url'], $webcode['news'][$i]['title'], null, $this->getNewsIconFilePath($webcode['news'][$i]['thumbnail'], null));
+            $title = str_replace($order, " · ", $webcode['news'][$i]['title']);
+    		$workflow->result($i, $webcode['news'][$i]['share_url'], $title, null, $this->getNewsIconFilePath($webcode['news'][$i]['thumbnail'], null));
 		}
 
 		echo $workflow->toxml();
